@@ -68,7 +68,7 @@
     width: auto;
     color: #FFFFFF;
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 500;
     background-color: #00AF91;
     border: none;
     border-radius: 4px;
@@ -88,6 +88,8 @@
     margin: 25px;
     background-color: #FFFFFF;
     color: #FF8303;
+    cursor: pointer;
+    text-decoration: none;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
     transition: all 0.3s ease-in-out;
@@ -98,7 +100,6 @@
 .con-sto-product .product img {
     width: 100%;
     height: 60%;
-    cursor: default;
     border-radius: 6px 6px 0px 0px;
 }
 .con-sto-product .product .text {
@@ -121,6 +122,53 @@
     margin: 0;
     font-size: 18px;
 }
+.con-sto-product .fa-trash {
+    color: #DD1212;
+    font-size: 20px;
+}
+.con-sto-product .fa-trash:hover {
+    animation: 0.5s icons;
+}
+@keyframes icons {
+    0% {transform: rotate(0deg);}
+    35% {transform: rotate(30deg);}
+    70% {transform: rotate(-30deg);}
+    100% {transform: rotate(0deg);}
+}
+.modal label {
+    color: #9D9D9D;
+    font-size: 16px;
+    width: 160px;
+    margin-top: 6px;
+}
+.modal .form-control {
+    color: #9D9D9D;
+}
+.modal button.cancle {
+    border:  none;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #F1F1F1;
+    color: #787878;
+    font-size: 16px;
+    font-weight: 500;
+}
+.modal button.cancle:hover {
+    background-color: #e6e6e6;
+}
+.modal button.add {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #00AF91;
+}
+.modal button.add:hover {
+    background-color: #009b81;
+}
+
 /* INFORMATION */
 .con-sto .left {
     width: 10%;
@@ -150,7 +198,7 @@
 .con-sto .info .edit:hover {
     background-color: #f77b00;
 }
-.con-sto .info .save {
+.con-sto button.save {
     color: white;
     font-size: 14px;
     font-weight: 500;
@@ -159,8 +207,21 @@
     border-radius: 4px;
     background-color: #00AF91;
 }
-.con-sto .info .save:hover {
+.con-sto button.save:hover {
     background-color: #009b81;
+}
+.con-sto button.back {
+    color: #787878;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #F1F1F1;
+    border: 1px solid #e0e0e0;
+}
+.con-sto button.back:hover {
+    background-color: #e6e6e6;
 }
 .con-sto .info h4 {
     font-size: 20px;
@@ -174,5 +235,8 @@
     font-weight: 400;
 }
 .con-sto input {
+    color: #9D9D9D !important;
+}
+.con-sto textarea {
     color: #9D9D9D !important;
 }

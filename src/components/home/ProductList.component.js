@@ -1,6 +1,16 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchAllProduct } from '../../redux/actions/productsActionCreator';
 
-const ProductList = () => {
+const ProductList = ({ products, dispatchGetAllProductsAction }) => {
+  
+  useEffect(() => {
+      dispatchGetAllProductsAction()
+  }, [dispatchGetAllProductsAction])
+  
+  // console.log('hey', products)
+
   return (
     <>
       <div className="con-productList d-flex justify-content-between px-2 mt-4 mb-2">
@@ -21,13 +31,13 @@ const ProductList = () => {
         </div>
       </div>
       <div className="con-productList row m-0 justify-content-between">
-        {Data.map((product, index) => (    
-          <Link to={`/product/${product.id}`} className="productList" key={index}>
-            <img className="product-image" src={product.image} alt=""/>
+        {products.map((product) => (    
+          <Link to={`/product/${product.productId}`} className="productList" key={product.productId}>
+            <img className="product-image" src={product.productImage} alt=""/>
             <div className="con-product-text px-2">
-              <h5>{product.product_name}</h5>
-              <p><span>{product.stock}</span> ready</p>
-              <h4>Rp. {product.price}</h4>
+              <h5>{product.productName}</h5>
+              <p><span>{product.stockProduct}</span> ready</p>
+              <h4>{product.price}</h4>
             </div>
           </Link>
         ))}
@@ -36,63 +46,68 @@ const ProductList = () => {
   )
 }
 
-export default ProductList;
+const mapStateToProps = state => ({ products: state.products });
+const mapDispatchToProps = dispatch => ({
+  dispatchGetAllProductsAction: () => 
+    dispatch(fetchAllProduct())
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
 
-const Data = [
-  {
-    'id': 1,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 2,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 3,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 4,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 5,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 6,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 7,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  },
-  {
-    'id': 7,
-    'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-    'product_name': 'Nama Product Tampil Disini',
-    'stock': 50,
-    'price': '100.000'
-  }
-]
+// const Data = [
+//   {
+//     'id': 1,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 2,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 3,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 4,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 5,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 6,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 7,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   },
+//   {
+//     'id': 7,
+//     'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//     'product_name': 'Nama Product Tampil Disini',
+//     'stock': 50,
+//     'price': '100.000'
+//   }
+// ]

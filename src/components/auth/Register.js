@@ -1,29 +1,79 @@
+import { useState } from 'react';
+import { connect } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
+import { registerUser } from '../../redux/actions/authActionCreator';
 
-const Register = ({ handleAuth }) => {
+const Register = ({ handleAuth, dispatchRegisterAction }) => {
+  const { addToast } = useToasts();
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    dispatchRegisterAction(firstName, lastName, email, username, password, 
+    () => addToast('Create Account Successfully', { appearance: 'success' }),
+    (response) => addToast(`Error: ${response}`, { appearance: 'error' }));
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleOnSubmit}>
         <h3 className="auth-title">Register</h3>
         <div className="form mt-2">
-          <input type="text" autoComplete="off" required/>
+          <input required
+            autoComplete="off" 
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
           <label className="label-name">
             <span className="content-name">First Name</span>
           </label>
         </div>
         <div className="form mt-2">
-          <input type="text" autoComplete="off" required/>
+          <input required
+            autoComplete="off" 
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
           <label className="label-name">
             <span className="content-name">Last Name</span>
           </label>
         </div>
         <div className="form mt-2">
-          <input type="text" autoComplete="off" required/>
+          <input required
+            autoComplete="off"
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <label className="label-name">
+            <span className="content-name">Email</span>
+          </label>
+        </div>
+        <div className="form mt-2">
+          <input required
+            autoComplete="off" 
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
           <label className="label-name">
             <span className="content-name">Username</span>
           </label>
         </div>
         <div className="form mt-2">
-          <input type="password" autoComplete="off" required/>
+          <input required
+            autoComplete="off" 
+            type="text"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <label className="label-name">
             <span className="content-name">Password</span>
           </label>
@@ -35,4 +85,9 @@ const Register = ({ handleAuth }) => {
   )
 }
 
-export default Register;
+
+const mapDispatchToProps = dispatch => ({
+  dispatchRegisterAction: (firstName, lastName, email, username, password, onSuccess, onError) => 
+    dispatch(registerUser({ firstName, lastName, email, username, password }, onSuccess, onError))
+});
+export default connect(null, mapDispatchToProps)(Register);

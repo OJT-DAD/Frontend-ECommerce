@@ -2,6 +2,7 @@
     width: 100vw;
     background-color: #FF8303;
     min-height: 80px;
+    z-index: 1;
 }
 .navbar-title {
     color: #ffffff !important;
@@ -22,7 +23,7 @@
     width: 21.3px;
     margin-right: 20px;
 }
-.profile {
+.navbar .profile {
     height: 30px;
     width: 30px;
     margin-top: auto; margin-bottom: auto;
@@ -35,10 +36,26 @@
     align-items: center;
     justify-content: center;
 }
-.user {
+.navbar .user {
     margin-left: 5px;
     margin-top: auto; margin-bottom: auto;
     color: #ffffff;
+    font-weight: 500 !important;
     font-size: 16px;
     font-weight: 400;
+}
+.navbar .dropdown-item {
+    color: #FF8303;
+    font-weight: 500;
+}
+.navbar .dropdown-item:focus {
+    background-color: #FF8303;
+    color: #ffffff;
+}
+.navbar .dropdown-item.logout {
+    color: #DD1212;
+}
+.navbar .dropdown-item.logout:focus {
+    background-color: #DD1212;
+    color: #ffffff;
 }

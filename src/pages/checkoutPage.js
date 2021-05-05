@@ -10,7 +10,7 @@ const CheckoutPage = () => {
   return (
     <div>
       <Navbar />
-          {Data.map((store, index) => (
+      {Data.map((store, index) => (
       <div className="con-checkout">
         <header>
           <h2>Checkout</h2>
