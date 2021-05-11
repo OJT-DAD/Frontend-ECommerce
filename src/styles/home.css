@@ -1,7 +1,6 @@
 .con-home {
     width: 88vw;
     margin-left: 6vw;
-    margin-right: auto;
     margin-top: 100px;
     margin-bottom: 100px;
     flex-direction: column;
@@ -9,6 +8,7 @@
 }
 .carousel {
     width: 100%;
+    min-width: 1200px;
     height: 300px;
     border-radius: 2px;
     display: flex;
@@ -41,6 +41,7 @@
 }
 .con-productList {
     width: 100%;
+    min-width: 1200px;
     height: auto;
     /* background-color: chartreuse; */
 }
@@ -50,7 +51,7 @@
     background-color: #FFFFFF;
     border-radius: 6px;
     text-decoration: none;
-    margin: 10px;
+    margin: 25px;
     padding: 0px;
     transition: all 0.3s ease-in-out;
     border: 1px solid #e6e6e6;
@@ -99,6 +100,7 @@
 /* PRODUCT DESCRIPTION */
 .con-product-desc {
     width: 88vw;
+    min-width: 900px;
     display: flex;
     flex-direction: column;
     margin-left: 6vw;
@@ -151,6 +153,10 @@
     font-size: 18px;
     color: #787878;
     font-weight: 400;
+}
+.desc span {
+    font-size: 20px;
+    color: #FF8303;
 }
 .desc h4 {
     font-size: 26px;

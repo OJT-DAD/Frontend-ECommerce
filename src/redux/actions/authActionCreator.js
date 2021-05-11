@@ -7,7 +7,7 @@ export const registerUser = (data, onSuccess, onError) => ({
         url: '/user-management/register',
         data,
         // success: (response) => (setUserInfo(response)),
-        postProcessSuccess: onSuccess,
+        postProccessSuccess: onSuccess,
         postProccessError: onError
     }
 });
@@ -29,20 +29,16 @@ export const logoutUser = () => {
     return { type: constants.RESET_USER_INFO };
 };
 
-export const getUserById = (userId, onSuccess) => ({
-    type: constants.API,
-    payload: {
-        method: 'GET',
-        url: `/user-management/get-by-id/${userId}`,
-        postProccessSuccess: onSuccess
-    }
-});
 
-export const updateUserById = (userId, data, onSuccess, onError) => ({
+export const updatePersonalUser = (id, data, onSuccess, onError) => ({
     type: constants.API,
     payload: {
         method: 'PUT',
-        url: ''
+        url: `/user-management/update/${id}`,
+        data,
+        success: (response) => (setUserInfo(response)),
+        postProccessSuccess: onSuccess,
+        postProccessError: onError
     }
 });
 
@@ -54,6 +50,7 @@ const setUserInfo = (data) => {
         fullName: `${data.firstName} ${data.lastName}`,
         role: data.role,
         token: data.token,
+        storeId: data.storeId,
         isLoggedIn: true
     };
     localStorage.setItem('USER_INFO', JSON.stringify(userInfo));

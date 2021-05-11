@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import { getStoreById, updateStoreById } from '../../redux/actions/storesActionCreator';
 
 
-const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreByIdAction }) => {
+const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) => {
   const { params } = useRouteMatch();
   const storeId = params.storeId;
-  const history = useHistory();
 
   const { addToast } = useToasts()
 
@@ -37,12 +36,9 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreByIdAction
     event.preventDefault();
     const id = parseInt(storeId);
     const data = { id, name, description, address, contact };
-    if(id) {
-      dispatchUpdateStoreByIdAction(storeId, data, () => {
-        history.push(history.location.pathname);
-        addToast('Update Store Successfully.', {appearance:'success'});
-      }, (message) => addToast(`Error: ${message}`, {appearance:'error'}));
-    }
+    dispatchUpdateStoreAction(id, data, () => {
+      addToast('Update Store Successfully.', {appearance:'success'});
+    }, (message) => addToast(`Error: ${message}`, {appearance:'error'}));
   };
 
   // console.log('okee', history.location.pathname);
@@ -55,7 +51,9 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreByIdAction
         (null)}
       </div>
       <div className="px-3 mt-3">
-      <form onSubmit={handleOnSubmit}>
+      <form 
+        onSubmit={handleOnSubmit}
+      >
         <div className="d-flex">
           <div className="left">
             <h5>Name</h5>
@@ -189,13 +187,11 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreByIdAction
   )
 }
 
-const mapStateToProps = state => ({
-  loading: state.loading
-});
+
 const mapDispatchToProps = dispatch => ({
   dispatchGetStoreByIdAction: (storeId, onSuccess) =>
     dispatch(getStoreById(storeId, onSuccess)),
-  dispatchUpdateStoreByIdAction: (storeId, data, onSuccess, onError) => 
-    dispatch(updateStoreById(storeId, data, onSuccess, onError))
+  dispatchUpdateStoreAction: (id, data, onSuccess, onError) => 
+    dispatch(updateStoreById(id, data, onSuccess, onError))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Information);
+export default connect(null, mapDispatchToProps)(Information);

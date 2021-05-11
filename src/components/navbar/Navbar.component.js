@@ -5,7 +5,7 @@ import './navbar.css';
 
 const Navbar = ({ auth, dispatchLogoutAction }) => {
   const history = useHistory();
-
+  
   return (
     <nav className="navbar navbar-expand-lg fixed-top navbar-light">
       <div className="container-fluid mx-5">
@@ -23,8 +23,8 @@ const Navbar = ({ auth, dispatchLogoutAction }) => {
               </p>
               <ul className="dropdown-menu">
                 <li><a className="dropdown-item" href={`/personal/${auth.userId}`}>{auth.fullName}</a></li>
-                {(auth.role === 'Seller' || auth.role === "Admin") && 
-                (<li><a className="dropdown-item" href="/store/1">Store</a></li>)}
+                {auth.storeId !== 0 && 
+                (<li><a className="dropdown-item" href={`/store/${auth.storeId}`}>Store</a></li>)}
                 {auth.role === "Admin" &&
                 (<li><a className="dropdown-item" href="/dashboard">Dashboard</a></li>)}
                 <li><a className="dropdown-item logout" href="/" onClick={dispatchLogoutAction}>Logout</a></li>

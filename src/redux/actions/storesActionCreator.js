@@ -19,15 +19,15 @@ export const getStoreById = (storeId, onSuccess) => ({
     }
 });
 
-export const updateStoreById = (storeId, data, onSuccess, onError) => ({
+export const updateStoreById = (id, data, onSuccess, onError) => ({
     type: constants.API,
     payload: {
         method: 'PUT',
-        url: `/seller/store/${storeId}`,
+        url: `/seller/store/${id}`,
         data,
+        success: (id, data) => (updateStore(id, data)),
         postProccessSuccess: onSuccess,
-        postProccessError: onError,
-        success: (storeId, data) => (updateStore(storeId, data))
+        postProccessError: onError
     }
 });
 
@@ -40,7 +40,7 @@ const storeProduct = (data) => ({
     type: constants.GET_STORE_BY_ID,
     payload: data.store
 });
-const updateStore = (storeId, data) => ({
+const updateStore = (id, data) => ({
     type: constants.UPDATE_STORE,
-    payload: { storeId, data }
-});
+    payload: { id, data } 
+ });

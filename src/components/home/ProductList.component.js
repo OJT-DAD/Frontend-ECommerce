@@ -30,7 +30,7 @@ const ProductList = ({ products, dispatchGetAllProductsAction }) => {
           </label>
         </div>
       </div>
-      <div className="con-productList row m-0 justify-content-between">
+      <div className="con-productList row m-0 p-0">
         {products.map((product) => (    
           <Link to={`/product/${product.productId}`} className="productList" key={product.productId}>
             <img className="product-image" src={product.productImage} alt=""/>

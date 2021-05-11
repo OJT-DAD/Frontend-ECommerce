@@ -5,6 +5,7 @@ const defaultState = {
     fullName: null,
     role: null,
     token: null,
+    storeId: 0,
     isLoggedIn: false
 };
 

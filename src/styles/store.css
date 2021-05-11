@@ -135,6 +135,11 @@
     70% {transform: rotate(-30deg);}
     100% {transform: rotate(0deg);}
 }
+.modal h4 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #9D9D9D;
+}
 .modal label {
     color: #9D9D9D;
     font-size: 16px;
@@ -167,6 +172,18 @@
 }
 .modal button.add:hover {
     background-color: #009b81;
+}
+.modal button.delete {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #DD1212;
+}
+.modal button.delete:hover {
+    background-color: #c91212;
 }
 
 /* INFORMATION */

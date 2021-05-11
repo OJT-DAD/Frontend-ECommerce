@@ -1,22 +1,57 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { connect } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import { getProductById } from '../redux/actions/productsActionCreator';
+import { addProductToCart } from '../redux/actions/cartActionCreator';
 import Navbar from '../components/navbar/Navbar.component';
 
-const ProductPage = ({ dispatchGetProductByIdAction }) => {
+const ProductPage = ({ auth, dispatchGetProductByIdAction, dispatchAddProductToCart }) => {
   const [products, setProducts] = useState({});
+  const [count, setCount] = useState(0);
 
+  // TOAST NOTIFICATIONS
+  const { addToast } = useToasts();
+
+  // GET PRODUCT BY PRODUCT ID
   let params = useParams();
-  
   useEffect(() => {
     dispatchGetProductByIdAction(params.productId, (data) =>
     {
       setProducts(data.product)
     });
   }, [dispatchGetProductByIdAction, params.productId]);
+
+  // SET PRODUCT QUANTITY
+  let quantity = count;
+  const addCount = () => {
+    if(count === products.stockProduct)
+      return null;
+    setCount(count + 1);
+  };
+  const minCount = () => {
+    if(count === 0)
+      return null;
+    setCount(count - 1);
+  };
+
+  // ADD PRODUCT TO CART
+  const productId = products.productId;
+  const storeId = products.storeId;
+  const userId = auth.userId;
+  const productName = products.productName;
+  const addCartProduct = (event) => {
+    event.preventDefault();
+    if(quantity === 0) 
+      return addToast('Please add product quantity!', {appearance:'warning'})
+    else{
+      dispatchAddProductToCart({productId, storeId, userId, quantity}, 
+        () => addToast(`${productName} added to cart.`, {appearance:'success'}),
+        (response) => addToast(`Error: ${response}`, {appearance:'error'}));
+    }
+  }
   
-  console.log('hhh', products)
+  // console.log('hhh', quantity)
   return (
     <>
       <Navbar />
@@ -29,10 +64,21 @@ const ProductPage = ({ dispatchGetProductByIdAction }) => {
           <div className="desc">
             <h3>{products.productName}</h3>
             {/* <p>{products.description.slice(0,80)}...</p> */}
-            <h5>{products.stockProduct} product ready</h5>
+            <div>
+              <h5>{products.stockProduct} product ready</h5>
+              <div className="d-flex mt-3">
+                <span onClick={addCount}>
+                  <i className="fas fa-plus-square"/>
+                </span>
+                <span className="mx-3">{quantity}</span>
+                <span onClick={minCount}>
+                  <i className="fas fa-minus-square"/>
+                </span>
+              </div>
+            </div>
             <h4>{products.price}</h4>
             <div className="flex-column d-flex prod">
-              <button type="button" className="cart">
+              <button type="button" className="cart" onClick={addCartProduct}>
                 <i className="fas fa-cart-plus"/>
                 add to cart
               </button>
@@ -54,11 +100,14 @@ const ProductPage = ({ dispatchGetProductByIdAction }) => {
   )
 }
 
+const mapStateToProps = state => ({ auth: state.auth });
 const mapDispatchToProps = dispatch => ({
   dispatchGetProductByIdAction: (id, onSuccess) => 
-    dispatch(getProductById(id, onSuccess))
+    dispatch(getProductById(id, onSuccess)),
+  dispatchAddProductToCart: (data) => 
+    dispatch(addProductToCart(data))
 });
-export default connect(null, mapDispatchToProps)(ProductPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
 
 const Modal = ({ images }) => {
   return (

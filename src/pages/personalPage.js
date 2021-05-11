@@ -14,7 +14,7 @@ const PersonalPage = ({ auth }) => {
     setStore({  ...store, request: !store.request })
   };
   const handleManageStore = () => {
-    history.push(`/store/${auth.userId}`)
+    history.push(`/store/${auth.storeId}`)
   }
 
   return (
