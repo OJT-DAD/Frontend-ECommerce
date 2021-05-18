@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
 import { createProduct } from '../../redux/actions/productsActionCreator';
+import defaultImageSrc from '../../images/Loading.png';
 
 const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
   const { addToast } = useToasts();
@@ -9,8 +10,9 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
   const [Name, setName] = useState('');
   const [Price, setPrice] = useState('');
   const [StockProduct, setStockProduct] = useState('');
-  const [ImageUrl, setImageUrl] = useState('');
+  const [ImageUrl, setImageUrl] = useState(null);
   const [Description, setDescription] = useState('');
+  const [ImageSrc, setImageSrc] = useState(defaultImageSrc);
 
   const handleOnSubmit = event => {
     event.preventDefault();
@@ -29,20 +31,16 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
     }, (message) => addToast(`Error ${message}`, {appearance:'error'}))
   };
 
-  // const handleOnSubmit = event => {
-  //   event.preventDefault();
-  //   let formData = new FormData()
-  //   formData.append("StoreId", StoreId);
-  //   formData.append("Name", Name);
-  //   formData.append("Price", Price);
-  //   formData.append("StockProduct", StockProduct);
-  //   formData.append("ImageUrl", ImageUrl);
-  //   formData.append("Description", Description);
-  //   dispatchCreateProductAction(formData, () => {
-  //     addToast('Create Product Successfully', {appearance:'success'})
-  //     window.location.reload();
-  //   }, (message) => addToast(`Error ${message}`, {appearance:'error'}))
-  // };
+  const handleChangeImage = e => {
+    let imageFile = e.target.files[0];
+    setImageUrl(imageFile);
+    const reader = new FileReader();
+    reader.onload = x => {
+      setImageSrc(x.target.result)
+    }
+    reader.readAsDataURL(imageFile)
+  }
+
 
 
   return (
@@ -91,11 +89,11 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
                   type="file" 
                   accept="image/*"
                   placeholder="Image"
-                  value={ImageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)} 
+                  onChange={handleChangeImage} 
                   className="form-control"
                 />
               </div>
+              <img src={ImageSrc} className="imageView" alt="imageView"/>
               <div className="d-flex mb-3">
                 <label>Description</label>
                 <textarea

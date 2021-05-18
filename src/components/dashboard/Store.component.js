@@ -34,7 +34,7 @@ const Store = ({ stores, dispatchGetAllStoreAction, dispatchDeleteStoreAction })
     });
   };
 
-  // console.log('hehe', stores);
+  console.log('hehe', path);
   return (
     <div className="con-dashboard-right">
       <header className="px-3">
@@ -42,7 +42,16 @@ const Store = ({ stores, dispatchGetAllStoreAction, dispatchDeleteStoreAction })
           <i className="fas fa-arrow-left mr-2"/>
           Back
         </button>
-        <h4>Store Management</h4>
+        <h4>Active Store</h4>
+        <div className="dropdown my-auto">
+          <button className="btn-manage-store dropdown-toggle px-2 py-1" type="button" id="dropdown1" data-bs-toggle="dropdown">
+            Manage
+          </button>
+          <ul className="dropdown-menu" aria-labelledby="dropdown1">
+            <li><a className="dropdown-item" href="/dashboard/store">Active Store</a></li>
+            <li><a className="dropdown-item" href="/dashboard/store-request">Request Store</a></li>
+          </ul>
+        </div>
       </header>
       <div className="con-right">
         <table className="store mb-5">

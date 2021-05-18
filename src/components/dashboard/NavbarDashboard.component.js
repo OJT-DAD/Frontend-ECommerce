@@ -11,7 +11,7 @@ const NavbarDashboard = () => {
       <h4 onClick={()=>{history.replace(`${url}`)}}>
         Admin<br/>Dashboard
       </h4>
-      <br/><br/><br/><br/><br/><br/><br/>
+      <br/><br/><br/><br/><br/><br/>
       <Link 
         className={urlFull === '/dashboard/product' ? "dashboard-item active" : "dashboard-item"}
         to={`${url}/product`}
@@ -47,7 +47,8 @@ const NavbarDashboard = () => {
         </table>
       </Link>
       <Link
-        className={urlFull === '/dashboard/store' ? "dashboard-item active" : "dashboard-item"}
+        className={(urlFull === '/dashboard/store' || urlFull === '/dashboard/store-request') ? 
+        "dashboard-item active" : "dashboard-item"}
         to={`${url}/store`}
       >
         <table>
@@ -58,6 +59,40 @@ const NavbarDashboard = () => {
               </td>
               <td>
                 <h6>Store</h6>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Link>
+      <Link
+        className={urlFull === '/dashboard/payment' ? "dashboard-item active" : "dashboard-item"}
+        to={`${url}/payment`}
+      >
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <i className="fas fa-credit-card"/>
+              </td>
+              <td>
+                <h6>Payment</h6>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Link>
+      <Link
+        className={urlFull === '/dashboard/shipment' ? "dashboard-item active" : "dashboard-item"}
+        to={`${url}/shipment`}
+      >
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <i className="fas fa-shipping-fast"/>
+              </td>
+              <td>
+                <h6>Shipment</h6>
               </td>
             </tr>
           </tbody>

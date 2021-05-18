@@ -9,6 +9,10 @@ import User from '../components/dashboard/User.component';
 import UserEdit from '../components/dashboard/UserEdit.component';
 import Store from '../components/dashboard/Store.component';
 import StoreEdit from '../components/dashboard/StoreEdit.component';
+import StoreRequest from '../components/dashboard/StoreRequest.component';
+import StoreRequestDetail from '../components/dashboard/StoreRequestDetail.component';
+import Payment from '../components/dashboard/Payment.component';
+import Shipment from '../components/dashboard/Shipment.component';
 import History from '../components/dashboard/History.component';
 
 const DashboardPage = () => {
@@ -37,6 +41,16 @@ const DashboardPage = () => {
             <Store />
           </Route>
           <Route exact path={`${path}/store/:storeId`} component={StoreEdit}/>
+          <Route exact path={`${path}/store-request`} component={StoreRequest}/>
+          <Route exact path={`${path}/store-request/:storeId`} component={StoreRequestDetail}/>
+
+          <Route exact path={`${path}/payment`}>
+            <Payment />
+          </Route>
+
+          <Route exact path={`${path}/shipment`}>
+            <Shipment />
+          </Route>
           
           <Route exact path={`${path}/history`}>
             <History />

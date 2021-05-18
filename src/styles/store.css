@@ -149,6 +149,13 @@
 .modal .form-control {
     color: #9D9D9D;
 }
+.modal .imageView {
+    border: 1px solid #dddddd;
+    width: 100px;
+    height: 100px;
+    margin-left: 115px;
+    margin-bottom: 20px;
+}
 .modal button.cancle {
     border:  none;
     height: 30px;
