@@ -22,13 +22,27 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
     formData.append("StockProduct", StockProduct);
     formData.append("ImageUrl", ImageUrl);
     formData.append("Description", Description);
-
-    console.log('haha', ImageUrl);
+    
     dispatchCreateProductAction(formData, () => {
       addToast('Create Product Successfully', {appearance:'success'})
       window.location.reload();
     }, (message) => addToast(`Error ${message}`, {appearance:'error'}))
   };
+
+  // const handleOnSubmit = event => {
+  //   event.preventDefault();
+  //   let formData = new FormData()
+  //   formData.append("StoreId", StoreId);
+  //   formData.append("Name", Name);
+  //   formData.append("Price", Price);
+  //   formData.append("StockProduct", StockProduct);
+  //   formData.append("ImageUrl", ImageUrl);
+  //   formData.append("Description", Description);
+  //   dispatchCreateProductAction(formData, () => {
+  //     addToast('Create Product Successfully', {appearance:'success'})
+  //     window.location.reload();
+  //   }, (message) => addToast(`Error ${message}`, {appearance:'error'}))
+  // };
 
 
   return (

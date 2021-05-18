@@ -8,6 +8,7 @@ import Product from '../components/dashboard/Product.component';
 import User from '../components/dashboard/User.component';
 import UserEdit from '../components/dashboard/UserEdit.component';
 import Store from '../components/dashboard/Store.component';
+import StoreEdit from '../components/dashboard/StoreEdit.component';
 import History from '../components/dashboard/History.component';
 
 const DashboardPage = () => {
@@ -35,6 +36,7 @@ const DashboardPage = () => {
           <Route exact path={`${path}/store`}>
             <Store />
           </Route>
+          <Route exact path={`${path}/store/:storeId`} component={StoreEdit}/>
           
           <Route exact path={`${path}/history`}>
             <History />
@@ -46,5 +48,5 @@ const DashboardPage = () => {
     </>
   )
 }
-  
+
 export default DashboardPage;

@@ -1,11 +1,40 @@
-import { Link, useHistory } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
+import { connect } from 'react-redux';
+import { fetchAllStore, deleteStore } from '../../redux/actions/storesActionCreator';
+import StoreModalDelete from './StoreModalDelete.component'
 
-const Store = () => {
+const Store = ({ stores, dispatchGetAllStoreAction, dispatchDeleteStoreAction }) => {
+  const [selected, setSelected] = useState('');
+
   const history = useHistory();
+  const {path} = useRouteMatch();
+  const { addToast } = useToasts();
+
   const handleBack = () => {
     history.replace("/dashboard")
   };
 
+  useEffect(() => dispatchGetAllStoreAction(), [dispatchGetAllStoreAction])
+
+  const showDeleteModal = (event, id) => {
+    event.preventDefault();
+    setSelected(id);
+    window.$('#modalDeleteStore').modal('show');
+  };
+
+  const handleOnDelete = () => {
+    dispatchDeleteStoreAction(selected, () => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast('Delete Store Successfully.', {appearance:'warning'});
+    }, (message) => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
+
+  // console.log('hehe', stores);
   return (
     <div className="con-dashboard-right">
       <header className="px-3">
@@ -14,10 +43,6 @@ const Store = () => {
           Back
         </button>
         <h4>Store Management</h4>
-        <button className="add my-auto px-2 py-1">
-          <i className="fas fa-plus mr-2"/>
-          Store
-        </button>
       </header>
       <div className="con-right">
         <table className="store mb-5">
@@ -32,10 +57,9 @@ const Store = () => {
             </tr>
           </thead>
           <tbody>
-            {Data.map((store) => (
+            {stores.map((store) => (
             <tr key={store.id}>
-              <td>{store.store_name}</td>
-              {/* <td>{store.description.slice(0,25)}</td> */}
+              <td>{store.name}</td>
               <td>
                 {store.description.length >= 25 ? 
                 `${store.description.slice(0,25)}...` : 
@@ -48,44 +72,53 @@ const Store = () => {
               </td>
               <td>{store.contact}</td>
               <td>
-                <Link className="Link">
+                <Link className="Link" to={`${path}/${store.id}`}>
                   Detail
                 </Link>
               </td>
               <td>
-                <button>Delete</button>
+                <button onClick={(e) => showDeleteModal(e, store.id)}>Delete</button>
               </td>
             </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <StoreModalDelete handleOnDelete={handleOnDelete}/>
     </div>
   )
 }
 
-export default Store;
+const mapStateToProps = state => ({ stores: state.stores });
+const mapDispatchToProps = dispatch => ({
+  dispatchGetAllStoreAction: () => dispatch(fetchAllStore()),
+  dispatchDeleteStoreAction: (id, onSuccess, onError) => 
+    dispatch(deleteStore(id, onSuccess, onError))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Store);
 
-const Data = [
-  {
-    'id': 1,
-    'store_name': 'QB Store',
-    'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
-    'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
-    'contact': '0-21-740-0122'
-  },
-  {
-    'id': 2,
-    'store_name': 'QB Store',
-    'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
-    'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
-    'contact': '0-21-740-0122'
-  },
-  {
-    'id': 3,
-    'store_name': 'QB Store',
-    'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
-    'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
-    'contact': '0-21-740-0122'
-  },
-]
+
+
+// const Data = [
+//   {
+//     'id': 1,
+//     'store_name': 'QB Store',
+//     'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
+//     'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
+//     'contact': '0-21-740-0122'
+//   },
+//   {
+//     'id': 2,
+//     'store_name': 'QB Store',
+//     'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
+//     'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
+//     'contact': '0-21-740-0122'
+//   },
+//   {
+//     'id': 3,
+//     'store_name': 'QB Store',
+//     'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem',
+//     'address': 'Jl Pamulang Permai I B-XI/1, Dki Jakarta',
+//     'contact': '0-21-740-0122'
+//   },
+// ]

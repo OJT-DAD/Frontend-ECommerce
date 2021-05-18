@@ -67,12 +67,12 @@ const ProductPage = ({ auth, dispatchGetProductByIdAction, dispatchAddProductToC
             <div>
               <h5>{products.stockProduct} product ready</h5>
               <div className="d-flex mt-3">
-                <span onClick={addCount}>
-                  <i className="fas fa-plus-square"/>
-                </span>
-                <span className="mx-3">{quantity}</span>
                 <span onClick={minCount}>
                   <i className="fas fa-minus-square"/>
+                </span>
+                <span className="mx-3">{quantity}</span>
+                <span onClick={addCount}>
+                  <i className="fas fa-plus-square"/>
                 </span>
               </div>
             </div>
@@ -104,8 +104,8 @@ const mapStateToProps = state => ({ auth: state.auth });
 const mapDispatchToProps = dispatch => ({
   dispatchGetProductByIdAction: (id, onSuccess) => 
     dispatch(getProductById(id, onSuccess)),
-  dispatchAddProductToCart: (data) => 
-    dispatch(addProductToCart(data))
+  dispatchAddProductToCart: (data, onSuccess, onError) => 
+    dispatch(addProductToCart(data, onSuccess, onError))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
 

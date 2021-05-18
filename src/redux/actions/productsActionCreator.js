@@ -1,11 +1,14 @@
 import * as constants from '../constants';
 
-export const fetchAllProduct = () => ({
+export const fetchAllProduct = (Sort, onSuccess, onError) => ({
     type: constants.API,
     payload: {
         method: 'GET',
-        url: '/product/get-home-user',
-        success: (response) => (setAllProduct(response))
+        url: `/product/get-home-user`
+        +(Sort !== "" ? `?Sort=${Sort}` : ""),
+        success: (response) => (setAllProduct(response)),
+        postProccessSuccess: onSuccess,
+        postProccessError: onError
     }
 });
 

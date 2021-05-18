@@ -15,7 +15,7 @@ export const apiMiddleware = ({ dispatch, getState }) => next => action => {
 
     axios({
         method,
-        url: BASE_URL + url, 
+        url: BASE_URL + url,
         data: data ? data : null
     }).then((response) => {
         dispatch({ type: constants.TOGGLE_LOADER });

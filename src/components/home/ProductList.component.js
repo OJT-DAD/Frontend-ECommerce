@@ -1,26 +1,34 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchAllProduct } from '../../redux/actions/productsActionCreator';
 
 const ProductList = ({ products, dispatchGetAllProductsAction }) => {
+  const [Sort, setSort] = useState('');
+
+  
   
   useEffect(() => {
-      dispatchGetAllProductsAction()
-  }, [dispatchGetAllProductsAction])
+      dispatchGetAllProductsAction(Sort)
+  }, [dispatchGetAllProductsAction, Sort])
   
-  // console.log('hey', products)
+  console.log('hey', Sort)
 
   return (
     <>
       <div className="con-productList d-flex justify-content-between px-2 mt-4 mb-2">
         <div className="input-group input350">
           <label className="input-group-text">Sort</label>
-          <select className="form-select" id="inputGroupSelect01">
-            <option value="">Choose sort by</option>
-            <option value="1">Name</option>
-            <option value="2">Price</option>
-            <option value="3">Three</option>
+          <select 
+            className="form-select" 
+            value={Sort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            <option value={''}>Choose sort by</option>
+            <option value={1}>Sort by name</option>
+            <option value={2}>Sort by date post</option>
+            <option value={3}>Sort by price</option>
+            <option value={4}>Sort by price descending</option>
           </select>
         </div>
         <div className="input-group input350">
@@ -48,8 +56,8 @@ const ProductList = ({ products, dispatchGetAllProductsAction }) => {
 
 const mapStateToProps = state => ({ products: state.products });
 const mapDispatchToProps = dispatch => ({
-  dispatchGetAllProductsAction: () => 
-    dispatch(fetchAllProduct())
+  dispatchGetAllProductsAction: (Sort, onSuccess, onError) => 
+    dispatch(fetchAllProduct(Sort, onSuccess, onError))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList);
 
