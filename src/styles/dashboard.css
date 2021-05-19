@@ -316,6 +316,14 @@
     font-weight: 500;
 }
 
+/* STORE REQUEST DETAIL */
+.con-right.reqStoreDetail label:first-child {
+    width: 110px;
+}
+.con-right.reqStoreDetail label:last-child {
+    width: 70%;
+}
+
 /* PAYMENT PAGE */
 .con-right .con-bank {
     display: flex;
