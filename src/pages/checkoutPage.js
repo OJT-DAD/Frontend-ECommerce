@@ -20,7 +20,7 @@ const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
     })
   }, [dispatchGetCartDetailAction, checkoutId])
 
-  console.log('hehe', cartDetail)
+  // console.log('hehe', cartDetail)
   return (
     <>
     {cartDetail !== undefined && 
@@ -47,7 +47,7 @@ const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
                 <tr className="bb" key={list.id}>
                   <td>
                     <span className="d-flex">
-                        {/* <img src={list.image} alt=""/> */}
+                        <img src={list.productImageUrl} alt=""/>
                         <h4 className="m-0 my-auto">{list.productName}</h4>
                     </span>
                   </td>

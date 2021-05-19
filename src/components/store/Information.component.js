@@ -41,6 +41,9 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
     }, (message) => addToast(`Error: ${message}`, {appearance:'error'}));
   };
 
+  const onSubmitPayment = () => {};
+  const onSubmitShipment = () => {};
+
   // console.log('okee', history.location.pathname);
   return (
     <div className="con-sto mt-3 py-4">
@@ -152,34 +155,38 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
           <div className="left">
             <h5>Payment</h5>
           </div>
-          <div className="right d-flex">
-            {!edit.change ?
-            (<input type="text" placeholder="Bank Name" className="form-control left" disabled/>) :
-            (<input type="text" placeholder="Bank Name" className="form-control left"/>)}
-            {!edit.change ?
-            (<input type="text" placeholder="Account Number" className="form-control right ml-3" disabled/>) :
-            (<input type="text" placeholder="Account Number" className="form-control right ml-3"/>)}
+          <div className="right d-flex flex-column">
+            {/* LIST BANK */}
+            <div className="d-flex mb-2">
+              <input type="text" value={'BNI'} placeholder="Bank Name" className="form-control left" disabled/>
+              <input type="text" value={'0909999090909099'} placeholder="Bank Name" className="form-control right ml-3" disabled/>
+            </div>
+            {/* ADD BANK */}
+            {edit.change &&
+            (<form onSubmit={onSubmitPayment} className="d-flex">
+              <input type="text" placeholder="Bank Name" className="form-control left"/>
+              <input type="text" placeholder="Account Number" className="form-control right ml-3"/>
+              <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
+            </form>)}
           </div>
         </div>
         <div className="d-flex mt-3">
           <div className="left">
             <h5>Shipment</h5>
           </div>
-          <div className="right d-flex">
-            {!edit.change ?
-            (<input type="text" placeholder="Shipment Name" className="form-control left" disabled/>) :
-            (<input type="text" placeholder="Shipment Name" className="form-control left"/>)}
-            {!edit.change ?
-            (<input
-              type="text" 
-              placeholder="Shipment Price" 
-              className="form-control right ml-3"
-              disabled/>) :
-            (<input
-              type="text" 
-              placeholder="Shipment Price" 
-              className="form-control right ml-3"
-            />)}
+          <div className="right d-flex flex-column">
+            {/* LIST SHIPMENT */}
+            <div className="d-flex mb-2">
+              <input type="text" placeholder="Shipment Name" value={'JNE'} className="form-control left" disabled/>
+              <input type="text" placeholder="Shipment Price" value={'Rp. 10.000'} className="form-control right ml-3" disabled/>
+            </div>
+            {/* ADD SHIPMENT */}
+            {edit.change &&
+            (<form className="d-flex" onSubmit={onSubmitShipment}>
+              <input type="text" placeholder="Shipment Name" className="form-control left"/>
+              <input type="text" placeholder="Shipment Price" className="form-control right ml-3"/>
+              <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
+            </form>)}
           </div>
         </div>
       </div>
