@@ -65,6 +65,7 @@ const Store = ({ stores, dispatchGetAllStoreAction, dispatchDeleteStoreAction })
               <th className="action">Action</th>
             </tr>
           </thead>
+          {stores.length > 0 ?
           <tbody>
             {stores.map((store) => (
             <tr key={store.id}>
@@ -90,7 +91,11 @@ const Store = ({ stores, dispatchGetAllStoreAction, dispatchDeleteStoreAction })
               </td>
             </tr>
             ))}
-          </tbody>
+          </tbody>:
+          <div className="text-center mt-5">
+              <h2 className="text-center"> There is no store signed </h2>
+          </div>
+          }
         </table>
       </div>
       <StoreModalDelete handleOnDelete={handleOnDelete}/>

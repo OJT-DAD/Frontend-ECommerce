@@ -1,15 +1,27 @@
-// import { useState } from 'react';
+import { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import { useHistory, Link, useRouteMatch } from 'react-router-dom';
+import { fetchAllNewSeller } from '../../redux/actions/adminNewSellerActionCreator';
 
-const StoreRequest = () => {
+const StoreRequest = ({
+  dispatchGetAllNewSellerAction,
+  adminNewSellers
+}) => {
 
   const history = useHistory();
   const { path } = useRouteMatch();
+
+  const { addToast } = useToasts();
 
   const handleBack = () => {
     history.replace("/dashboard")
   };
 
+  //redux load data
+  useEffect(() => {
+    dispatchGetAllNewSellerAction()
+  }, [dispatchGetAllNewSellerAction]);
 
   return (
     <div className="con-dashboard-right">
@@ -41,7 +53,7 @@ const StoreRequest = () => {
             </tr>
           </thead>
           <tbody>
-            {stores.map((store) => (
+            {adminNewSellers.map((store) => (
             <tr key={store.id}>
               <td>
                 {store.fullName.length >= 25 ? 
@@ -71,22 +83,8 @@ const StoreRequest = () => {
   )
 }
 
-export default StoreRequest;
-
-
-const stores = [
-  {
-    'id': 1,
-    'fullName': 'Rafi Ardiansyah',
-    'storeName': 'Rafi Store',
-    'email': 'rafi@gmail.com',
-    'npwp': '979789789797'
-  },
-  {
-    'id': 2,
-    'fullName': 'Ardi Hanafi',
-    'storeName': 'Ardi Store',
-    'email': 'ardi@gmail.com',
-    'npwp': '234234222432'
-  },
-]
+const mapStateToProps = state => ({ adminNewSellers: state.adminNewSellers });
+const mapDispatchToProps = dispatch => ({
+  dispatchGetAllNewSellerAction: () => dispatch(fetchAllNewSeller())
+});
+export default connect(mapStateToProps, mapDispatchToProps)(StoreRequest);

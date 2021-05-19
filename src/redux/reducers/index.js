@@ -8,6 +8,7 @@ import users from '../reducers/userReducer';
 import carts from '../reducers/cartReducer';
 import adminPayments from '../reducers/adminPaymentReducer';
 import adminShipments from '../reducers/adminShipmentReducer';
+import adminNewSellers from '../reducers/adminNewSellerReducer';
 
 const rootReducer = combineReducers({ 
     auth, 
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     users,
     carts,
     adminPayments,
-    adminShipments
+    adminShipments,
+    adminNewSellers
 });
 
 export default rootReducer;

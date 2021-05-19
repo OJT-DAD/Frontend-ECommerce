@@ -1,15 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import { useHistory } from 'react-router-dom';
+import { deleteAdminShipment, fetchAllAdminShipment, createAdminShipment } from '../../redux/actions/adminShipmentActionCreator';
 import ShipmentModalDelete from './ShipmentModalDelete.component';
 
-const Shipment = () => {
+const Shipment = ({
+  dispatchFetchAllAdminShipmentAction,
+  dispatchDeleteAdminShipment,
+  dispatchCreateAdminShipment,
+  adminShipments
+}) => {
+
   const [selected, setSelected] = useState();
+  const [shipmentName, setShipmentName] = useState('');
+  const [shipmentCost, setShipmentCost] = useState();
 
   const history = useHistory();
+
+  const { addToast } = useToasts();
 
   const handleBack = () => {
     history.replace('/dashboard')
   };
+
+  //redux load data
+  useEffect(() => {
+    dispatchFetchAllAdminShipmentAction()
+  }, [dispatchFetchAllAdminShipmentAction]);
 
   const showModalDeleteShipment = (event, id) => {
     event.preventDefault();
@@ -17,7 +35,29 @@ const Shipment = () => {
     window.$('#modalDeleteShipment').modal('show');
   };
 
-  const handleOnDelete = () => {};
+  const handleOnDelete = () => {
+    dispatchDeleteAdminShipment(selected, () => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast('Delete Store Successfully.', {appearance:'warning'});
+    }, (message) => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
+
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    const data = {shipmentName, shipmentCost}
+    dispatchCreateAdminShipment( data , () => {
+      dispatchFetchAllAdminShipmentAction()
+      addToast('Create Shipment Method Successfully.', {appearance:'success'});
+      setTimeout(()=> {
+        window.location.reload();
+      }, 1000)
+    }, (message) => {
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
 
   return (
     <div className="con-dashboard-right">
@@ -33,19 +73,25 @@ const Shipment = () => {
           <h4>Shipping Method</h4>
           <h4>Price</h4>
         </div>
-        {ShipmentData.map((shipment) => (
+        {adminShipments.map((shipment) => (
         <div className="d-flex" key={shipment.id}>
           <label>{shipment.shippingMethodName}</label>
-          <label>Rp. {shipment.shippingCost}</label>
+          <label>{shipment.shippingCost}</label>
           <span onClick={(e) => showModalDeleteShipment(e, shipment.id)}>
             <i className="fas fa-trash ml-3"/>
           </span>
         </div>
         ))}
-        <form className="d-flex">
-          <input className="form-control" placeholder="Shipping Method"/>
-          <input className="form-control ml-3" placeholder="Price"/>
-          <button className="add py-1 px-2 my-auto ml-3">Add</button>
+        <form className="d-flex" onSubmit={handleOnSubmit}>
+          <input 
+            className="form-control" 
+            placeholder="Shipping Method"
+            onChange={(e) => setShipmentName(e.target.value)} />
+          <input 
+            className="form-control ml-3" 
+            placeholder="Price"
+            onChange={(e) => setShipmentCost(parseFloat(e.target.value))} />
+          <button type="submit" className="add py-1 px-2 my-auto ml-3">Add</button>
         </form>
       </div>
       <ShipmentModalDelete handleOnDelete={handleOnDelete}/>
@@ -53,22 +99,14 @@ const Shipment = () => {
   )
 }
 
-export default Shipment;
-
-const ShipmentData = [
-  {
-    "id": 1,
-    "shippingMethodName": "JNT",
-    "shippingCost": "10.000"
-  },
-  {
-    "id": 2,
-    "shippingMethodName": "JNE",
-    "shippingCost": "15.000"
-  },
-  {
-    "id": 3,
-    "shippingMethodName": "POS",
-    "shippingCost": "20.000"
-  },
-]
+const mapStateToProps = state => ({ 
+  adminShipments : state.adminShipments
+});
+const mapDispatchToProps = dispatch => ({
+  dispatchFetchAllAdminShipmentAction: () => dispatch(fetchAllAdminShipment()),
+  dispatchDeleteAdminShipment: (id, onSuccess, onError) => 
+    dispatch(deleteAdminShipment(id, onSuccess, onError)),
+  dispatchCreateAdminShipment: (data, onSuccess, onError) =>
+    dispatch(createAdminShipment(data, onSuccess, onError))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Shipment);
