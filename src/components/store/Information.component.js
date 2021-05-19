@@ -3,9 +3,25 @@ import { connect } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
 import { getStoreById, updateStoreById } from '../../redux/actions/storesActionCreator';
+import { fetchAllAdminPayment } from '../../redux/actions/adminPaymentActionCreator';
+import { fetchAllAdminShipment } from '../../redux/actions/adminShipmentActionCreator';
+import { createSellerPayment, fetchAllSellerPayment } from '../../redux/actions/sellerPaymentActionCreator';
+import { createSellerShipment, fetchAllSellerShipment } from '../../redux/actions/sellerShipmentActionCreator';
 
-
-const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) => {
+const Information = ({ 
+  dispatchGetStoreByIdAction, 
+  dispatchUpdateStoreAction,
+  dispatchFetchAllAdminPaymentAction,
+  dispatchFetchAllAdminShipmentAction,
+  dispatchFetchAllSellerPaymentAction,
+  dispatchFetchAllSellerShipmentAction,
+  dispatchCreateSellerPayment,
+  dispatchCreateSellerShipment,
+  adminPayments,
+  adminShipments,
+  sellerPayments,
+  sellerShipments
+}) => {
   const { params } = useRouteMatch();
   const storeId = params.storeId;
 
@@ -18,11 +34,20 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
   const [address, setAddress] = useState('');
   const [contact, setContact] = useState('');
 
+  //asset for payment and shipment
+  const [bankId, setBankId] = useState();
+  const [bankAccountNumber, setBankAccountNumber] = useState();
+  const [shippingMethodId, setShippingMethodId] = useState();
+
   const handleEdit = () => {
     setEdit({  ...edit, change: !edit.change })
   };
 
   useEffect(() => {
+    dispatchFetchAllAdminPaymentAction()
+    dispatchFetchAllAdminShipmentAction()
+    dispatchFetchAllSellerPaymentAction(storeId)
+    dispatchFetchAllSellerShipmentAction(storeId)
     dispatchGetStoreByIdAction(storeId, (data) => 
     {
       setName(data.store.name);
@@ -30,7 +55,7 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
       setAddress(data.store.address);
       setContact(data.store.contact);
     })
-  }, [dispatchGetStoreByIdAction, storeId]);
+  }, [dispatchFetchAllAdminPaymentAction, dispatchFetchAllAdminShipmentAction, dispatchFetchAllSellerPaymentAction, dispatchFetchAllSellerShipmentAction ,dispatchGetStoreByIdAction, storeId]);
 
   const handleOnSubmit = event => {
     event.preventDefault();
@@ -41,10 +66,37 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
     }, (message) => addToast(`Error: ${message}`, {appearance:'error'}));
   };
 
-  const onSubmitPayment = () => {};
-  const onSubmitShipment = () => {};
+  const onSubmitPayment = (event) => {
+    event.preventDefault();
+    const storeId = parseInt(params.storeId)
+    const data = {bankId, storeId, bankAccountNumber}
+    console.log(data)
+    dispatchCreateSellerPayment( data , () => {
+      addToast('Create Payment Successfully.', {appearance:'success'});
+      setTimeout(()=> {
+        window.location.reload();
+      }, 1000)
+    }, (message) => {
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
 
-  // console.log('okee', history.location.pathname);
+
+  const onSubmitShipment = (event) => {
+    event.preventDefault();
+    const storeId = parseInt(params.storeId)
+    const data = {shippingMethodId, storeId}
+    console.log(data)
+    dispatchCreateSellerShipment( data , () => {
+      addToast('Create Shipment Successfully.', {appearance:'success'});
+      setTimeout(()=> {
+        window.location.reload();
+      }, 1000)
+    }, (message) => {
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
+
   return (
     <div className="con-sto mt-3 py-4">
       <div className="d-flex justify-content-between info">
@@ -157,15 +209,24 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
           </div>
           <div className="right d-flex flex-column">
             {/* LIST BANK */}
+          {
+            sellerPayments.map((payment)=> (
             <div className="d-flex mb-2">
-              <input type="text" value={'BNI'} placeholder="Bank Name" className="form-control left" disabled/>
-              <input type="text" value={'0909999090909099'} placeholder="Bank Name" className="form-control right ml-3" disabled/>
+                  <input type="text" value={payment.bankName} className="form-control left" disabled/>
+                  <input type="text" value={payment.bankAccountNumber} className="form-control right ml-3" disabled/>
             </div>
+            ))
+          }
             {/* ADD BANK */}
             {edit.change &&
             (<form onSubmit={onSubmitPayment} className="d-flex">
-              <input type="text" placeholder="Bank Name" className="form-control left"/>
-              <input type="text" placeholder="Account Number" className="form-control right ml-3"/>
+              <select className="form-select" onChange={(e)=> setBankId(parseInt(e.target.value))}>
+                <option value="">Chose Shipment</option>
+                {adminPayments.map((payment)=> (
+                  <option value={payment.id}>{payment.bankName}</option>
+                ))}
+              </select>
+              <input type="text" placeholder="Account Number" className="form-control right ml-3" onChange={(e)=> setBankAccountNumber(e.target.value)} value={bankAccountNumber}/>
               <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
             </form>)}
           </div>
@@ -176,15 +237,23 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
           </div>
           <div className="right d-flex flex-column">
             {/* LIST SHIPMENT */}
+            {
+            sellerShipments.map((shipment)=> (
             <div className="d-flex mb-2">
-              <input type="text" placeholder="Shipment Name" value={'JNE'} className="form-control left" disabled/>
-              <input type="text" placeholder="Shipment Price" value={'Rp. 10.000'} className="form-control right ml-3" disabled/>
+                  <input type="text" value={shipment.shippingName} className="form-control left" disabled/>
+                  <input type="text" value={shipment.shippingCost} className="form-control right ml-3" disabled/>
             </div>
+            ))
+          }
             {/* ADD SHIPMENT */}
             {edit.change &&
             (<form className="d-flex" onSubmit={onSubmitShipment}>
-              <input type="text" placeholder="Shipment Name" className="form-control left"/>
-              <input type="text" placeholder="Shipment Price" className="form-control right ml-3"/>
+              <select className="form-select" onChange={(e)=> setShippingMethodId(parseInt(e.target.value))}>
+                <option value="">Chose Shipment</option>
+                {adminShipments.map((payment)=> (
+                  <option value={payment.id}>{payment.shippingMethodName}</option>
+                ))}
+              </select>
               <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
             </form>)}
           </div>
@@ -194,11 +263,29 @@ const Information = ({ dispatchGetStoreByIdAction, dispatchUpdateStoreAction }) 
   )
 }
 
+const mapStateToProps = state => ({ 
+  adminPayments: state.adminPayments,
+  adminShipments : state.adminShipments,
+  sellerPayments : state.sellerPayments,
+  sellerShipments : state.sellerShipments
+});
 
 const mapDispatchToProps = dispatch => ({
+  dispatchFetchAllAdminPaymentAction: () => dispatch(fetchAllAdminPayment()),
+  dispatchFetchAllAdminShipmentAction: () => dispatch(fetchAllAdminShipment()),
+
+  //seller payment and shipment
+  dispatchFetchAllSellerPaymentAction: (storeId) => dispatch(fetchAllSellerPayment(storeId)),
+  dispatchFetchAllSellerShipmentAction: (storeId) => dispatch(fetchAllSellerShipment(storeId)),
+  dispatchCreateSellerPayment: (data, onSuccess, onError) =>
+    dispatch(createSellerPayment(data, onSuccess, onError)),
+  dispatchCreateSellerShipment: (data, onSuccess, onError) =>
+    dispatch(createSellerShipment(data, onSuccess, onError)),
+
+  //others
   dispatchGetStoreByIdAction: (storeId, onSuccess) =>
     dispatch(getStoreById(storeId, onSuccess)),
   dispatchUpdateStoreAction: (id, data, onSuccess, onError) => 
     dispatch(updateStoreById(id, data, onSuccess, onError))
 });
-export default connect(null, mapDispatchToProps)(Information);
+export default connect(mapStateToProps, mapDispatchToProps)(Information);
