@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getProductById } from '../../redux/actions/productsActionCreator';
+import { getProductById, updateProductById } from '../../redux/actions/productsActionCreator';
 import { useParams } from 'react-router-dom';
 
 
-const ProductEdit = ({ dispatchGetProductByIdAction }) => {
-  const [data, setData] = useState('');
+const ProductEdit = ({ dispatchGetProductByIdAction, dispatchUpdateProductAction }) => {
+  // const [data, setData] = useState('');
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState(0);
@@ -15,7 +15,7 @@ const ProductEdit = ({ dispatchGetProductByIdAction }) => {
 
   useEffect(() => {
     dispatchGetProductByIdAction(productId, (data) => {
-      setData(data.product);
+      // setData(data.product);
       setProductName(data.product.productName);
       setPrice(data.product.price);
       setStock(data.product.stockProduct);
@@ -23,9 +23,13 @@ const ProductEdit = ({ dispatchGetProductByIdAction }) => {
     })
   }, [dispatchGetProductByIdAction, productId])
 
-  console.log('okey', data);
+  console.log('okey');
   
-  const handleOnSubmit = () => {};
+  const handleOnSubmit = (event) => {
+    const id = productId;
+    event.preventDefault();
+    dispatchUpdateProductAction(id,)
+  };
   
   return (
     <div className="con-sto storeProductEdit mt-3 p-3">
@@ -62,6 +66,8 @@ const ProductEdit = ({ dispatchGetProductByIdAction }) => {
 
 const mapDispatchToProps = dispatch => ({
   dispatchGetProductByIdAction: (id, onSuccess) => 
-    dispatch(getProductById(id, onSuccess))
+    dispatch(getProductById(id, onSuccess)),
+  dispatchUpdateProductAction: (id, data, onSuccess, onError) => 
+    dispatch(updateProductById(id, data, onSuccess, onError))
 });
 export default connect(null, mapDispatchToProps)(ProductEdit);

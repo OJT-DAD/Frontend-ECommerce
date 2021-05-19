@@ -64,7 +64,7 @@ const CartPage = ({
       addToast('Delete Product Successfully.', {appearance:'warning'});
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }, (message) => {
       window.$('#modalDeleteProductCart').modal('hide');
       addToast(`Error: ${message}`, {appearance:'error'});

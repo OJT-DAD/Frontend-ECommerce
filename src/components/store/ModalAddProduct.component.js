@@ -17,7 +17,6 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
   const handleOnSubmit = event => {
     event.preventDefault();
     let formData = new FormData()
-    // const data = { StoreId, Name, Price, StockProduct, ImageUrl, Description };
     formData.append("StoreId", StoreId);
     formData.append("Name", Name);
     formData.append("Price", Price);
@@ -27,7 +26,10 @@ const ModalAddProduct = ({ StoreId, dispatchCreateProductAction }) => {
     
     dispatchCreateProductAction(formData, () => {
       addToast('Create Product Successfully', {appearance:'success'})
-      window.location.reload();
+      window.$('#modalAddProduct').modal('hide');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000)
     }, (message) => addToast(`Error ${message}`, {appearance:'error'}))
   };
 

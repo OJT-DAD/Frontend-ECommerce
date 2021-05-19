@@ -1,49 +1,67 @@
-import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getCartDetailById } from '../redux/actions/cartActionCreator';
 import '../styles/checkout.css';
 import Navbar from '../components/navbar/Navbar.component';
 
-const CheckoutPage = () => {
-  const history = useHistory();
+const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
   const [shipment, setShipment] = useState();
+  const [cartDetail, setCartDetail] = useState();
+  const [cartDetailList, setCartDetailList] = useState();
+  
+  const history = useHistory();
+  const { checkoutId } = useParams();
 
+  useEffect(() => {
+    dispatchGetCartDetailAction(checkoutId, (data) => {
+      setCartDetail(data.cartDetails)
+      setCartDetailList(data.cartDetails.lists)
+    })
+  }, [dispatchGetCartDetailAction, checkoutId])
+
+  console.log('hehe', cartDetail)
   return (
-    <div>
+    <>
+    {cartDetail !== undefined && 
+    (<div>
       <Navbar />
-      {Data.map((store, index) => (
       <div className="con-checkout">
         <header>
           <h2>Checkout</h2>
         </header>
         <div className="con-detail">
-          <table key={index} className="store">
+          <table className="store">
             <thead>
               <tr className="bb">
-                <th>{store.store_name}</th>
+                <th>{cartDetail.storeName}</th>
                 <th>Price</th>
                 <th>Count</th>
                 <th>Total</th>
               </tr>
             </thead>
             <tbody>
-              {store.lists.map((list) => (
-              <tr className="bb" key={list.id}>
-                <td>
-                  <span className="d-flex">
-                      <img src={list.image} alt=""/>
-                      <h4 className="m-0 my-auto">{list.product_name}</h4>
-                  </span>
-                </td>
-                <td>Rp. {list.price}</td>
-                <td>{list.count}</td>
-                <td>Rp. {list.total_price}</td>
-              </tr>
-              ))}
+              {cartDetailList !== undefined && 
+              (<>
+                {cartDetailList.map((list) => (
+                <tr className="bb" key={list.id}>
+                  <td>
+                    <span className="d-flex">
+                        {/* <img src={list.image} alt=""/> */}
+                        <h4 className="m-0 my-auto">{list.productName}</h4>
+                    </span>
+                  </td>
+                  <td>{list.productPrice}</td>
+                  <td>{list.quantity}</td>
+                  <td>{list.totalPrice}</td>
+                </tr>
+                ))}
+              </>)}
               <tr>
                 <td></td>
                 <td></td>
                 <td>Total Price</td>
-                <td className="total">Rp {store.total_price}</td>
+                <td className="total">{cartDetail.totalCost}</td>
               </tr>
             </tbody>
           </table>
@@ -97,16 +115,24 @@ const CheckoutPage = () => {
 					</table>
 				</form>
         <div className="con-purchace mt-3">
-          <h4>Total Purchase <span>Rp. 430.000</span></h4>
-          <button type="button" onClick={()=>{history.push(`/payment/${store.id}`)}}>Checkout</button>
+          <h4>Total Purchase <span>{cartDetail.finalTotalCost}</span></h4>
+          <button type="button" onClick={()=>{history.push(`/payment/${cartDetail.id}`)}}>Checkout</button>
         </div>
       </div>
-    ))}
-    </div>
+    </div>)}
+    </>
   )
 }
 
-export default CheckoutPage;
+
+const mapStateToProps = state => ({
+  carts: state.carts
+});
+const mapDispatchToProps = dispatch => ({
+  dispatchGetCartDetailAction: (id, onSuccess) => 
+    dispatch(getCartDetailById(id, onSuccess))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPage);
 
 const Ship = [
   {
@@ -123,28 +149,28 @@ const Ship = [
 	}
 ]
 
-const Data = [
-  {
-    'id': 1,
-    'store_name': 'QB Store',
-    'lists': [
-      {
-        'id': 1,
-        'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-        'product_name': 'Nama Product Tampil Disini',
-        'count': 2,
-        'price': '100.000',
-        'total_price': '200.000'
-      },
-      {
-        'id': 2,
-        'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-        'product_name': 'Nama Product Tampil Disini',
-        'count': 2,
-        'price': '100.000',
-        'total_price': '200.000'
-      }
-    ],
-    'total_price': '400.000'
-  }
-]
+// const Data = [
+//   {
+//     'id': 1,
+//     'store_name': 'QB Store',
+//     'lists': [
+//       {
+//         'id': 1,
+//         'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//         'product_name': 'Nama Product Tampil Disini',
+//         'count': 2,
+//         'price': '100.000',
+//         'total_price': '200.000'
+//       },
+//       {
+//         'id': 2,
+//         'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
+//         'product_name': 'Nama Product Tampil Disini',
+//         'count': 2,
+//         'price': '100.000',
+//         'total_price': '200.000'
+//       }
+//     ],
+//     'total_price': '400.000'
+//   }
+// ]

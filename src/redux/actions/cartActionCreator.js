@@ -44,6 +44,16 @@ export const updateCartProduct = (data, onSuccess, onError) => ({
     }
 });
 
+export const getCartDetailById = (id, onSuccess) => ({
+    type: constants.API,
+    payload: {
+        method: 'GET',
+        url: `/user/cart/GetDetailCart/${id}`,
+        success: (response) => (getCartDetail(response)),
+        postProccessSuccess: onSuccess
+    }
+});
+
 
 
 const getCartData = (data) => ({
@@ -57,4 +67,8 @@ const removeCartProduct = (id) => ({
 const updateCart = (data) => ({
     type: constants.UPDATE_CART_PRODUCT,
     payload: data
+});
+const getCartDetail = (data) => ({
+    type: constants.GET_CART_DETAIL,
+    payload: data.cartDetails
 });

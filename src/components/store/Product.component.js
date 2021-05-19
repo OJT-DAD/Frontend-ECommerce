@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { connect } from "react-redux";
+import { useToasts } from 'react-toast-notifications';
 import { getStoreById } from '../../redux/actions/storesActionCreator';
+import { deleteProduct } from '../../redux/actions/productsActionCreator';
 import ModalAddProduct from './ModalAddProduct.component';
 import ProductModalDelete from './ProductModalDelete.component';
 
-const Product = ({ dispatchGetStoreByIdAction, stores }) => {
+const Product = ({ dispatchGetStoreByIdAction, stores, dispatchDeleteProductAction }) => {
   const [storeProduct, setStoreProduct] = useState([]);
   const [selected, setSelected] = useState();
 
@@ -13,6 +15,8 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
   const match = useRouteMatch();
   const storeId = match.params.storeId;
   
+  const { addToast } = useToasts();
+
   useEffect(() => {
     if(storeId){
       dispatchGetStoreByIdAction(storeId, (data) => 
@@ -28,7 +32,18 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
     window.$('#modalDeleteProduct').modal('show');
   };
 
-  const handleOnDelete = () => {};
+  const handleOnDelete = () => {
+    dispatchDeleteProductAction(selected, () => {
+      window.$('#modalDeleteProduct').modal('hide');
+      addToast('Delete Product Successfully.', {appearance:'warning'});
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }, (message) => {
+      window.$('#modalDeleteProduct').modal('hide');
+      addToast(`Error: ${message}`, {appearance: 'error'});
+    });
+  };
   
   return (
     <>
@@ -81,7 +96,9 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
 const mapStateToProps = state => ({ stores: state.stores });
 const mapDispatchToProps = dispatch => ({
   dispatchGetStoreByIdAction: (storeId, onSuccess) => 
-    dispatch(getStoreById(storeId, onSuccess))
+    dispatch(getStoreById(storeId, onSuccess)),
+  dispatchDeleteProductAction: (id, onSuccess, onError) => 
+    dispatch(deleteProduct(id, onSuccess, onError))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Product);
 
