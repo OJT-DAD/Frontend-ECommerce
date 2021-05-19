@@ -88,7 +88,6 @@
     margin: 25px;
     background-color: #FFFFFF;
     color: #FF8303;
-    cursor: pointer;
     text-decoration: none;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
@@ -101,6 +100,7 @@
     width: 100%;
     height: 60%;
     border-radius: 6px 6px 0px 0px;
+    cursor: pointer;
 }
 .con-sto-product .product .text {
     height: 40%;
@@ -191,6 +191,20 @@
 }
 .modal button.delete:hover {
     background-color: #c91212;
+}
+
+/* EDIT PRODUCT */
+.storeProductEdit label {
+    width: 130px;
+    margin-top: 6px;
+    color: #787878;
+}
+.storeProductEdit img {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #F1F1F1;
+    border-radius: 4px;
+    margin-left: 115px;
 }
 
 /* INFORMATION */

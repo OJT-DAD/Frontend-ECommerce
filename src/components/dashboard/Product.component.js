@@ -14,10 +14,6 @@ const Product = () => {
           Back
         </button>
         <h4>Product Management</h4>
-        <button className="add my-auto px-2 py-1">
-          <i className="fas fa-plus mr-2"/>
-          Product
-        </button>
       </header>
       <div className="con-right">
         <table className="product mb-5">

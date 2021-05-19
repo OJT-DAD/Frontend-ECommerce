@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { connect } from "react-redux";
 import { getStoreById } from '../../redux/actions/storesActionCreator';
 import ModalAddProduct from './ModalAddProduct.component';
+import ProductModalDelete from './ProductModalDelete.component';
 
 const Product = ({ dispatchGetStoreByIdAction, stores }) => {
   const [storeProduct, setStoreProduct] = useState([]);
+  const [selected, setSelected] = useState();
 
+  const history = useHistory();
   const match = useRouteMatch();
   const storeId = match.params.storeId;
   
@@ -19,7 +22,13 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
     }
   }, [dispatchGetStoreByIdAction, storeId]);
   
-  // console.log('sasasasa', storeProduct)
+  const showModalDelete = (event, id) => {
+    event.preventDefault();
+    setSelected(id);
+    window.$('#modalDeleteProduct').modal('show');
+  };
+
+  const handleOnDelete = () => {};
   
   return (
     <>
@@ -37,12 +46,16 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
         </div>
         <div className="con-sto-product row p-0 m-0">
           {storeProduct.map((product) => (
-          <Link 
+          <div
             className="product d-flex flex-column p-0" 
             key={product.id}
-            to={`/store/${stores.id}/product/${product.id}`}
+            // to={`/store/${stores.id}/product/${product.id}`}
           >
-            <img src={product.productImageUrl} alt=""/>
+            <img
+              onClick={() => history.push(`/store/${stores.id}/product/${product.id}`)}
+              src={product.productImageUrl} 
+              alt=""
+            />
             <div className="text p-2 flex-column d-flex justify-content-between">
               {product.productName.length > 33 ?
               (<h5>{product.productName.slice(0,60)}...</h5>) : 
@@ -50,16 +63,17 @@ const Product = ({ dispatchGetStoreByIdAction, stores }) => {
               <p>Stock <span>{product.productStock}</span> ready</p>
               <div className="d-flex justify-content-between">
                 <h6>{product.productPrice}</h6>
-                <span className="pointer">
+                <span className="pointer" onClick={(e) => showModalDelete(e, product.id)}>
                   <i className="fas fa-trash"/>
                 </span>
               </div>
             </div>
-          </Link>
+          </div>
           ))}
         </div>
       </div>
       <ModalAddProduct StoreId={stores.id} />
+      <ProductModalDelete handleOnDelete={handleOnDelete} />
     </>
   )
 }
