@@ -396,3 +396,31 @@
     66% {transform: rotate(30deg);}
     100% {transform: rotate(0deg);}
 }
+
+/* TABLE HISTORY */
+.con-right table.history thead th {
+    width: 20%;
+    height: 50px;
+    color: #9D9D9D;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    border-bottom: 2px solid #FF8303;
+    /* border: 1px solid red; */
+}
+.con-right table.history tbody td {
+    height: 50px;
+    color: #FF8303;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    border-bottom: 2px solid #E5E5E5;
+    /* border: 1px solid blue; */
+}
+.con-right table.history button {
+    border: none;
+    background-color: #00AF91;
+    color: #FFFFFF;
+    font-weight: 500;
+    border-radius: 4px;
+}
