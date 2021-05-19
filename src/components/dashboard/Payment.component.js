@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { connect } from "react-redux";
+import { useToasts } from 'react-toast-notifications';
+import { deleteAdminPayment, fetchAllAdminPayment } from '../../redux/actions/adminPaymentActionCreator';
 import PaymentModalDelete from './PaymentModalDelete.component';
 import PaymentModalAdd from './PaymentModalAdd.component';
 
-const Payment = () => {
+const Payment = ({
+    dispatchFetchAllAdminPaymentAction, 
+    dispatchDeleteAdminPayment,
+    adminPayments
+  }) => {
+
   const [edit, setEdit] = useState({ delete: false });
   const [selected, setSelected] = useState();
+  const { addToast } = useToasts();
 
   const history = useHistory();
 
   const handleBack = () => {
     history.replace('/dashboard')
   };
+
+  //redux load data
+  useEffect(() => {
+    dispatchFetchAllAdminPaymentAction()
+  }, [dispatchFetchAllAdminPaymentAction]);
 
   const handleEdit = () => {
     setEdit({  ...edit, delete: !edit.delete })
@@ -27,7 +41,15 @@ const Payment = () => {
     window.$('#modalDeletePayment').modal('show');
   };
 
-  const handleOnDelete = () => {};
+  const handleOnDelete = () => {
+    dispatchDeleteAdminPayment(selected, () => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast('Delete Store Successfully.', {appearance:'warning'});
+    }, (message) => {
+      window.$('#modalDeleteStore').modal('hide');
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
 
   return (
     <div className="con-dashboard-right">
@@ -41,7 +63,7 @@ const Payment = () => {
       </header>
       <div className="con-right" style={{backgroundColor:'transparent'}}>
         <div className="row">
-          {BankList.map((bank) => (
+          {adminPayments.map((bank) => (
           <div className="con-bank" key={bank.id}>
             <i className="fas fa-university"/>
             <h4>{bank.bankName}</h4>
@@ -62,25 +84,12 @@ const Payment = () => {
     </div>
   )
 }
-
-export default Payment;
-
-
-const BankList = [
-  {
-    'id': 1,
-    'bankName': 'BRI'
-  },
-  {
-    'id': 2,
-    'bankName': 'BNI'
-  },
-  {
-    'id': 3,
-    'bankName': 'BCA'
-  },
-  {
-    'id': 4,
-    'bankName': 'MANDIRI'
-  },
-]
+const mapStateToProps = state => ({ 
+  adminPayments : state.adminPayments
+});
+const mapDispatchToProps = dispatch => ({
+  dispatchFetchAllAdminPaymentAction: () => dispatch(fetchAllAdminPayment()),
+  dispatchDeleteAdminPayment: (id, onSuccess, onError) => 
+    dispatch(deleteAdminPayment(id, onSuccess, onError))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Payment);

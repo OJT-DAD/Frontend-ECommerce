@@ -1,8 +1,26 @@
-import React from 'react'
+import { useState } from 'react';
+import { useToasts } from 'react-toast-notifications';
+import { connect } from 'react-redux';
+import { createAdminPayment } from '../../redux/actions/adminPaymentActionCreator';
 
-const PaymentModalAdd = () => {
+const PaymentModalAdd = ({dispatchCreateAdminPayment}) => {
 
-  const handleOnSubmit = () => {};
+  const { addToast } = useToasts();
+
+  const [bankName, setBankName] = useState('');
+
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    const data = {bankName}
+    dispatchCreateAdminPayment( data , () => {
+      addToast('Create Payment Successfully.', {appearance:'success'});
+      setTimeout(()=> {
+        window.location.reload();
+      }, 1000)
+    }, (message) => {
+      addToast(`Error: ${message}`, {appearance:'error'});
+    });
+  };
 
   return (
     <div className="modal fade" id="modalAddPayment" tabIndex="-1">
@@ -16,8 +34,7 @@ const PaymentModalAdd = () => {
                   required
                   type="text" 
                   placeholder="Bank Name"
-                  // value={firstName}
-                  // onChange={(e) => setFirstName(e.target.value)} 
+                  onChange={(e) => setBankName(e.target.value)} 
                   className="form-control"
                 />
               </div>
@@ -33,4 +50,8 @@ const PaymentModalAdd = () => {
   )
 }
 
-export default PaymentModalAdd
+const mapDispatchToProps = dispatch => ({
+  dispatchCreateAdminPayment: (data, onSuccess, onError) =>
+    dispatch(createAdminPayment(data, onSuccess, onError))
+});
+export default connect(null, mapDispatchToProps)(PaymentModalAdd);
