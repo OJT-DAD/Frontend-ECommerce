@@ -1,11 +1,25 @@
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { fetchAdminHistory } from '../../redux/actions/HistoryActionCreator';
+import { connect } from 'react-redux';
 
-const History = () => {
+const History = ({
+  dispatchFetchAdminHistoryAction,
+  historyTransactions
+}) => {
   const history = useHistory();
   const handleBack = () => {
     history.replace("/dashboard")
   };
 
+  //redux load data
+  useEffect(() => {
+    dispatchFetchAdminHistoryAction()
+  }, [dispatchFetchAdminHistoryAction]);
+
+  const cek = () => {
+    console.log(historyTransactions)
+  }
   return (
     <div className="con-dashboard-right">
       <header className="px-3">
@@ -13,6 +27,7 @@ const History = () => {
           <i className="fas fa-arrow-left mr-2"/>
           Back
         </button>
+        <button onClick={cek}>cek</button>
         <h4>History Management</h4>
       </header>
       <div className="con-right">
@@ -43,7 +58,13 @@ const History = () => {
   )
 }
 
-export default History;
+const mapStateToProps = state => ({ 
+  historyTransactions : state.historyTransactions
+});
+const mapDispatchToProps = dispatch => ({
+  dispatchFetchAdminHistoryAction: () => dispatch(fetchAdminHistory()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(History);
 
 const Data = {
   'storeName': 'Rafi Store',

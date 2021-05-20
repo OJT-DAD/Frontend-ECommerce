@@ -52,6 +52,9 @@ const StoreRequest = ({
               <th className="detail">Detail</th>
             </tr>
           </thead>
+          {
+            adminNewSellers.length > 0 ?
+          
           <tbody>
             {adminNewSellers.map((store) => (
             <tr key={store.id}>
@@ -76,7 +79,11 @@ const StoreRequest = ({
               </td>
             </tr>
             ))}
-          </tbody>
+          </tbody>:
+          <div className="text-center mt-5">
+            <h2 className="text-center"> There is no store request recently </h2>
+          </div>
+          }
         </table>
       </div>
     </div>

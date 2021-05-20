@@ -11,6 +11,7 @@ import adminShipments from '../reducers/adminShipmentReducer';
 import adminNewSellers from '../reducers/adminNewSellerReducer';
 import sellerPayments from '../reducers/sellerPaymentReducer';
 import sellerShipments from '../reducers/sellerShipmentReducer';
+import historyTransactions from '../reducers/HistoryReducer';
 
 const rootReducer = combineReducers({ 
     auth, 
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
     adminShipments,
     adminNewSellers,
     sellerPayments,
-    sellerShipments
+    sellerShipments,
+    historyTransactions
 });
 
 export default rootReducer;
