@@ -224,6 +224,25 @@
 .con-sto .right input.right {
     width: 50%;
 }
+.con-sto .right select.left {
+    width: 20%;
+}
+.con-sto .right select.right {
+    width: 50%;
+}
+.con-sto .right select.leftRight {
+    width: 71.5%;
+}
+.con-sto .right .fa-trash{
+    color: #DD1212;
+    font-size: 18px;
+    margin-top: 4px;
+}
+.con-sto .right .fa-trash:hover {
+    animation: 0.5s icons;
+}
+
+
 .con-sto .info .edit {
     color: white;
     font-size: 14px;
@@ -273,6 +292,9 @@
     font-weight: 400;
 }
 .con-sto input {
+    color: #9D9D9D !important;
+}
+.con-sto select {
     color: #9D9D9D !important;
 }
 .con-sto textarea {

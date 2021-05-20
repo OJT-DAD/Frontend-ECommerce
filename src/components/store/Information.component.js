@@ -5,8 +5,9 @@ import { useToasts } from 'react-toast-notifications';
 import { getStoreById, updateStoreById } from '../../redux/actions/storesActionCreator';
 import { fetchAllAdminPayment } from '../../redux/actions/adminPaymentActionCreator';
 import { fetchAllAdminShipment } from '../../redux/actions/adminShipmentActionCreator';
-import { createSellerPayment, fetchAllSellerPayment } from '../../redux/actions/sellerPaymentActionCreator';
-import { createSellerShipment, fetchAllSellerShipment } from '../../redux/actions/sellerShipmentActionCreator';
+import { createSellerPayment, fetchAllSellerPayment, deleteSellerPayment } from '../../redux/actions/sellerPaymentActionCreator';
+import { createSellerShipment, fetchAllSellerShipment, deleteSellerShipment } from '../../redux/actions/sellerShipmentActionCreator';
+import ModalDelete from './InfoModalDelete.component';
 
 const Information = ({ 
   dispatchGetStoreByIdAction, 
@@ -15,6 +16,8 @@ const Information = ({
   dispatchFetchAllAdminShipmentAction,
   dispatchFetchAllSellerPaymentAction,
   dispatchFetchAllSellerShipmentAction,
+  dispatchDeleteSellerShipment,
+  dispatchDeleteSellerPayment,
   dispatchCreateSellerPayment,
   dispatchCreateSellerShipment,
   adminPayments,
@@ -28,7 +31,7 @@ const Information = ({
   const { addToast } = useToasts()
 
   const [edit, setEdit] = useState({ change: false });
-  
+  const [selected, setSelected] = useState();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
@@ -57,7 +60,14 @@ const Information = ({
     })
   }, [dispatchFetchAllAdminPaymentAction, dispatchFetchAllAdminShipmentAction, dispatchFetchAllSellerPaymentAction, dispatchFetchAllSellerShipmentAction ,dispatchGetStoreByIdAction, storeId]);
 
+  const reloadPage = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000)
+  };
+
   const handleOnSubmit = event => {
+    reloadPage();
     event.preventDefault();
     const id = parseInt(storeId);
     const data = { id, name, description, address, contact };
@@ -97,13 +107,44 @@ const Information = ({
     });
   };
 
+  const showModalDeletePayment = (event, id) => {
+    event.preventDefault();
+    setSelected(id);
+    window.$('#modalDeletePaymentInfo').modal('show');
+  };
+  const showModalDeleteShipment = (event, id) => {
+    event.preventDefault();
+    setSelected(id);
+    window.$('#modalDeleteShipmentInfo').modal('show');
+  };
+
+  const handleOnDeletePayment = () => {
+    dispatchDeleteSellerPayment(selected, () => {
+      window.$('#modalDeletePaymentInfo').modal('hide');
+      addToast('Delete Payment Successfully.', {appearance:'warning'});
+    }, (message) => {
+      window.$('#modalDeletePaymentInfo').modal('hide');
+      addToast(`Error: ${message}`, {appearance: 'error'});
+    });
+  };
+  const handleOnDeleteShipment = () => {
+    dispatchDeleteSellerShipment(selected, () => {
+      window.$('#modalDeleteShipmentInfo').modal('hide');
+      addToast('Delete Shipment Successfully.', {appearance:'warning'});
+    }, (message) => {
+      window.$('#modalDeleteShipmentInfo').modal('hide');
+      addToast(`Error: ${message}`, {appearance: 'error'});
+    });
+  };
+
+
   return (
     <div className="con-sto mt-3 py-4">
       <div className="d-flex justify-content-between info">
         <h4>Store Information</h4>
         {!edit.change ? 
         (<button className="px-3 my-auto edit" onClick={handleEdit}>Edit</button>) :
-        (null)}
+        (<button className="px-3 my-auto back" onClick={handleEdit}>Cancle</button>)}
       </div>
       <div className="px-3 mt-3">
       <form 
@@ -199,8 +240,7 @@ const Information = ({
         </div>
         {edit.change &&
         (<div className="d-flex my-3">
-          <button className="px-3 ml-auto back" onClick={handleEdit}>Cancle</button>
-          <button className="px-3 ml-3 save" type="submit">Save</button>
+          <button className="px-3 ml-auto save" type="submit">Save</button>
         </div>)}
       </form>
         <div className="d-flex mt-3">
@@ -209,25 +249,28 @@ const Information = ({
           </div>
           <div className="right d-flex flex-column">
             {/* LIST BANK */}
-          {
-            sellerPayments.map((payment)=> (
+            {sellerPayments.map((payment)=> (
             <div className="d-flex mb-2">
-                  <input type="text" value={payment.bankName} className="form-control left" disabled/>
-                  <input type="text" value={payment.bankAccountNumber} className="form-control right ml-3" disabled/>
+              <input type="text" value={payment.bankName} className="form-control left" disabled/>
+              <input type="text" value={payment.bankAccountNumber} className="form-control right ml-3" disabled/>
+              {edit.change && 
+              (<span className="pointer ml-5" onClick={(e) => showModalDeletePayment(e, payment.id)}>
+                <i className="fas fa-trash"/>
+              </span>)}
             </div>
-            ))
-          }
+            ))}
+
             {/* ADD BANK */}
             {edit.change &&
             (<form onSubmit={onSubmitPayment} className="d-flex">
-              <select className="form-select" onChange={(e)=> setBankId(parseInt(e.target.value))}>
-                <option value="">Chose Shipment</option>
+              <select className="form-select left" onChange={(e)=> setBankId(parseInt(e.target.value))}>
+                <option value="">Chose Payment</option>
                 {adminPayments.map((payment)=> (
-                  <option value={payment.id}>{payment.bankName}</option>
+                <option value={payment.id}>{payment.bankName}</option>
                 ))}
               </select>
               <input type="text" placeholder="Account Number" className="form-control right ml-3" onChange={(e)=> setBankAccountNumber(e.target.value)} value={bankAccountNumber}/>
-              <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
+              <button type="submit" className="px-3 save my-auto ml-4">Add</button>
             </form>)}
           </div>
         </div>
@@ -237,28 +280,33 @@ const Information = ({
           </div>
           <div className="right d-flex flex-column">
             {/* LIST SHIPMENT */}
-            {
-            sellerShipments.map((shipment)=> (
+            {sellerShipments.map((shipment)=> (
             <div className="d-flex mb-2">
-                  <input type="text" value={shipment.shippingName} className="form-control left" disabled/>
-                  <input type="text" value={shipment.shippingCost} className="form-control right ml-3" disabled/>
+              <input type="text" value={shipment.shippingName} className="form-control left" disabled/>
+              <input type="text" value={shipment.shippingCost} className="form-control right ml-3" disabled/>
+              {edit.change && 
+              (<span className="pointer ml-5" onClick={(e) => showModalDeleteShipment(e, shipment.id)}>
+                <i className="fas fa-trash"/>
+              </span>)}
             </div>
-            ))
-          }
+            ))}
+
             {/* ADD SHIPMENT */}
             {edit.change &&
             (<form className="d-flex" onSubmit={onSubmitShipment}>
-              <select className="form-select" onChange={(e)=> setShippingMethodId(parseInt(e.target.value))}>
+              <select className="form-select leftRight" onChange={(e)=> setShippingMethodId(parseInt(e.target.value))}>
                 <option value="">Chose Shipment</option>
                 {adminShipments.map((payment)=> (
-                  <option value={payment.id}>{payment.shippingMethodName}</option>
+                <option value={payment.id}>{payment.shippingMethodName}</option>
                 ))}
               </select>
-              <button type="submit" className="px-3 save my-auto ml-auto">Add</button>
+              <button type="submit" className="px-3 save my-auto ml-4">Add</button>
             </form>)}
           </div>
         </div>
       </div>
+      <ModalDelete id="modalDeletePaymentInfo" handleOnDelete={handleOnDeletePayment} text="Corfirm for delete this Payment!"/>
+      <ModalDelete id="modalDeleteShipmentInfo" handleOnDelete={handleOnDeleteShipment} text="Corfirm for delete this Shipment!"/>
     </div>
   )
 }
@@ -281,6 +329,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(createSellerPayment(data, onSuccess, onError)),
   dispatchCreateSellerShipment: (data, onSuccess, onError) =>
     dispatch(createSellerShipment(data, onSuccess, onError)),
+  dispatchDeleteSellerPayment: (id, onSuccess, onError) => 
+    dispatch(deleteSellerPayment(id, onSuccess, onError)),
+  dispatchDeleteSellerShipment: (id, onSuccess, onError) =>
+    dispatch(deleteSellerShipment(id, onSuccess, onError)),
 
   //others
   dispatchGetStoreByIdAction: (storeId, onSuccess) =>
@@ -288,4 +340,5 @@ const mapDispatchToProps = dispatch => ({
   dispatchUpdateStoreAction: (id, data, onSuccess, onError) => 
     dispatch(updateStoreById(id, data, onSuccess, onError))
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(Information);

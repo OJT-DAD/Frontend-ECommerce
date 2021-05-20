@@ -2,25 +2,47 @@ import { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCartDetailById } from '../redux/actions/cartActionCreator';
-import '../styles/checkout.css';
+import { fetchAllSellerPayment } from '../redux/actions/sellerPaymentActionCreator';
+import { fetchAllSellerShipment } from '../redux/actions/sellerShipmentActionCreator';
 import Navbar from '../components/navbar/Navbar.component';
+import '../styles/checkout.css';
 
-const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
+const CheckoutPage = ({ 
+  dispatchGetCartDetailAction, 
+  dispatchFetchAllSellerPaymentAction, 
+  dispatchFetchAllSellerShipmentAction,
+  sellerPayments,
+  sellerShipments
+}) => {
+
   const [shipment, setShipment] = useState();
   const [cartDetail, setCartDetail] = useState();
   const [cartDetailList, setCartDetailList] = useState();
+  const [storeId, setStoreId] = useState(0); 
   
   const history = useHistory();
   const { checkoutId } = useParams();
-
+  
+  
   useEffect(() => {
     dispatchGetCartDetailAction(checkoutId, (data) => {
       setCartDetail(data.cartDetails)
       setCartDetailList(data.cartDetails.lists)
+      setStoreId(data.cartDetails.storeId)
     })
-  }, [dispatchGetCartDetailAction, checkoutId])
+  }, [checkoutId, dispatchGetCartDetailAction]);
+  
 
-  // console.log('hehe', cartDetail)
+  // FETCH ALL PAYMENT & SHIPMENT
+  useEffect(() => {
+    if(storeId !== 0){
+      dispatchFetchAllSellerPaymentAction(storeId)
+      dispatchFetchAllSellerShipmentAction(storeId)
+    }
+  }, [dispatchFetchAllSellerPaymentAction, dispatchFetchAllSellerShipmentAction, storeId])
+
+
+  // console.log('hehe', sellerShipments)
   return (
     <>
     {cartDetail !== undefined && 
@@ -82,8 +104,8 @@ const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
 								<th>
 										<select className="form-select" onChange={(e)=>setShipment(e.target.value)} value={shipment}>
 											<option value="">Chose Shipment</option>
-											{Ship.map((ship)=> (
-                        <option value={ship.price}>{ship.name}</option>
+											{sellerShipments.map((ship)=> (
+                        <option value={ship.id}>{ship.shippingName}</option>
 											))}
 										</select>
 								</th>
@@ -102,12 +124,12 @@ const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
 										<label>Payment</label>
 								</th>
 								<th>
-										<select className="form-select">
-											<option value="">Chose Payment</option>
-											<option value="1">BRI</option>
-											<option value="2">BCA</option>
-											<option value="3">BNI</option>
-										</select>
+									<select className="form-select">
+                    <option value="">Chose Payment</option>
+                    {sellerPayments.map((payment) => (
+										<option value={payment.id}>{payment.bankName}</option>
+                    ))}
+									</select>
 								</th>
 								<th></th>
 							</tr>
@@ -126,51 +148,14 @@ const CheckoutPage = ({ dispatchGetCartDetailAction, carts }) => {
 
 
 const mapStateToProps = state => ({
-  carts: state.carts
+  carts: state.carts,
+  sellerPayments : state.sellerPayments,
+  sellerShipments : state.sellerShipments
 });
 const mapDispatchToProps = dispatch => ({
   dispatchGetCartDetailAction: (id, onSuccess) => 
-    dispatch(getCartDetailById(id, onSuccess))
+    dispatch(getCartDetailById(id, onSuccess)),
+  dispatchFetchAllSellerPaymentAction: (storeId) => dispatch(fetchAllSellerPayment(storeId)),
+  dispatchFetchAllSellerShipmentAction: (storeId) => dispatch(fetchAllSellerShipment(storeId))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPage);
-
-const Ship = [
-  {
-    'name': 'JNT',
-		'price': '10.000'
-	},
-	{
-    'name': 'JNE',
-		'price': '20.000'
-	},
-	{
-		'name': 'POS',
-		'price': '30.000'
-	}
-]
-
-// const Data = [
-//   {
-//     'id': 1,
-//     'store_name': 'QB Store',
-//     'lists': [
-//       {
-//         'id': 1,
-//         'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-//         'product_name': 'Nama Product Tampil Disini',
-//         'count': 2,
-//         'price': '100.000',
-//         'total_price': '200.000'
-//       },
-//       {
-//         'id': 2,
-//         'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAvm6lUd8HMydmD9vT4aWoVkJZ8irqM3ZTWA&usqp=CAU',
-//         'product_name': 'Nama Product Tampil Disini',
-//         'count': 2,
-//         'price': '100.000',
-//         'total_price': '200.000'
-//       }
-//     ],
-//     'total_price': '400.000'
-//   }
-// ]
