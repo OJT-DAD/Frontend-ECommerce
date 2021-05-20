@@ -278,3 +278,95 @@
 .con-sto textarea {
     color: #9D9D9D !important;
 }
+
+/* HISTORY PAGE */
+.con-sto table.store-history {
+    width: 100%;
+    display: table;
+}
+.con-sto table.store-history th {
+    width: 20%;
+    height: 50px;
+    color: #9D9D9D;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    border-bottom: 2px solid #FF8303;
+    /* border: 1px solid red; */
+}
+.con-sto table.store-history td {
+    font-size: 14px;
+    color: #FF8303;
+    font-weight: 500;
+    text-align: center;
+    height: 50px;
+    border-bottom: 2px solid #E5E5E5;
+    /* border: 1px solid blue; */
+}
+
+/* SELLING PAGE */
+.con-sto table.selling {
+    width: 100%;
+    display: table;
+}
+.con-sto table.selling th {
+    width: 18%;
+    height: 50px;
+    color: #9D9D9D;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    border-bottom: 2px solid #FF8303;
+    /* border: 1px solid red; */
+}
+.con-sto table.selling th:last-child {
+    width: 10%;
+}
+.con-sto table.selling td {
+    font-size: 14px;
+    color: #FF8303;
+    font-weight: 500;
+    text-align: center;
+    height: 50px;
+    border-bottom: 2px solid #E5E5E5;
+    /* border: 1px solid blue; */
+}
+.con-sto table.selling .Link {
+    color: #FF8303;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid #FF8303;
+}
+/* SELLING DETAIL PAGE */
+.selling-detail .con-sto label {
+    color: #787878;
+    max-width: 150px;
+    min-width: 150px;
+    margin-top: 6px;
+}
+.selling-detail .con-sto img.payment-image {
+    height: 150px;
+    width: 150px;
+    border-radius: 4px;
+    border: 1px solid #9D9D9D;
+}
+.selling-detail .con-sto .con-product-list {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #d1d1d1;
+}
+.selling-detail .con-sto .con-product-list img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 4px 0px 0px 4px;
+    border-right: 1px solid #d1d1d1;
+}
+.selling-detail .con-sto .con-product-list h5 {
+    font-size: 16px;
+    font-weight: 500;
+}
+.selling-detail .con-sto .con-product-list h5:first-child {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 400;
+}

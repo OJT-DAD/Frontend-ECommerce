@@ -5,6 +5,8 @@ import Product from '../components/store/Product.component';
 import ProductEdit from '../components/store/ProductEdit.component';
 import Information from '../components/store/Information.component';
 import Selling from '../components/store/Selling.component';
+import SellingDetail from '../components/store/SellingDetail.component';
+import History from '../components/store/History.component';
 
 const StorePage = () => {
   const history = useHistory()
@@ -40,6 +42,11 @@ const StorePage = () => {
                 className={fullUrl === `/store/${params.storeId}/selling` ? "active" : ""}>
               Selling</h6>
             </Link>
+            <Link to={`${url}/history`} style={{textDecoration:'none'}} className="Link">
+              <h6
+                className={fullUrl === `/store/${params.storeId}/history` ? "active" : ""}>
+              History</h6>
+            </Link>
           </div>
         </nav>
         <Switch>
@@ -52,6 +59,10 @@ const StorePage = () => {
           </Route>
           <Route exact path={`${path}/selling`}>
             <Selling />
+          </Route>
+          <Route exact path={`${path}/selling/:sellingId`} component={SellingDetail}/>
+          <Route exact path={`${path}/history`}>
+            <History />
           </Route>
           <Redirect to={`${path}/product`}/>
         </Switch>
