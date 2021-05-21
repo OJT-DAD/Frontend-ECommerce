@@ -12,7 +12,7 @@ const ProductList = ({ products, dispatchGetAllProductsAction }) => {
       dispatchGetAllProductsAction(Sort)
   }, [dispatchGetAllProductsAction, Sort])
   
-  console.log('hey', Sort)
+  // console.log('hey', Sort)
 
   return (
     <>
@@ -41,7 +41,7 @@ const ProductList = ({ products, dispatchGetAllProductsAction }) => {
       <div className="con-productList row m-0 p-0">
         {products.map((product) => (    
           <Link to={`/product/${product.productId}`} className="productList" key={product.productId}>
-            <img className="product-image" src={product.productImage} alt=""/>
+            <img className="product-image" src={product.productImageUrl} alt=""/>
             <div className="con-product-text px-2">
               <h5>{product.productName}</h5>
               <p><span>{product.stockProduct}</span> ready</p>

@@ -34,7 +34,7 @@ const Login = ({ handleAuth, dispatchLoginAction }) => {
         <div className="form mt-2">
           <input required
             autoComplete="off" 
-            type="text"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

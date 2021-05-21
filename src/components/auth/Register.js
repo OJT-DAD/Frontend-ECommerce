@@ -14,9 +14,10 @@ const Register = ({ handleAuth, dispatchRegisterAction }) => {
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    dispatchRegisterAction(firstName, lastName, email, username, password, 
-    () => addToast('Create Account Successfully', { appearance: 'success' }),
-    (response) => addToast(`Error: ${response}`, { appearance: 'error' }));
+    dispatchRegisterAction(firstName, lastName, email, username, password, () => {
+      handleAuth();
+      addToast('Create Account Successfully', { appearance: 'success' });
+    },(response) => addToast(`Error: ${response}`, { appearance: 'error' }));
   };
 
   return (
@@ -69,8 +70,8 @@ const Register = ({ handleAuth, dispatchRegisterAction }) => {
         </div>
         <div className="form mt-2">
           <input required
-            autoComplete="off" 
-            type="text"
+            autoComplete="off"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

@@ -24,9 +24,9 @@ const PersonalPage = ({ auth }) => {
         <header>
           <h2>{auth.fullName}</h2>
         </header>
-        <div className="con-person">
+        {/* <div className="con-person">
           For Personal User
-        </div>
+        </div> */}
         <div className="con-person">
         {auth.role === "Seller" ? 
           (<div>
